@@ -1,0 +1,18 @@
+{
+  "name": "chezmoi-skill",
+  "owner": {
+    "name": "Brian Cosgrove"
+  },
+  "metadata": {
+    "description": "Claude Code skill for managing dotfiles with chezmoi"
+  },
+  "plugins": [
+    {
+      "name": "chezmoi",
+      "source": "./skills/chezmoi",
+      "description": "Manage dotfiles with chezmoi, including machine-specific templates",
+      "version": "1.0.0",
+      "strict": false
+    }
+  ]
+}
