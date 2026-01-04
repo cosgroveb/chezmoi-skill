@@ -1,0 +1,5 @@
+{
+  "name": "chezmoi",
+  "version": "1.0.0",
+  "description": "Manage dotfiles with chezmoi, including machine-specific templates"
+}
