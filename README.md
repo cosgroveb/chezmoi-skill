@@ -1,16 +1,27 @@
 # chezmoi-skill
 
-A Claude Code plugin that teaches Claude how to manage dotfiles with [chezmoi](https://www.chezmoi.io/), including machine-specific configuration.
+A Claude Code skill that teaches Claude how to manage dotfiles with [chezmoi](https://www.chezmoi.io/), including machine-specific configuration.
 
 ## Installation
 
-```bash
-# Add the marketplace
-/plugin marketplace add cosgroveb/chezmoi-skill
+### Manual
 
-# Install the skill
-/plugin install chezmoi@chezmoi-skill
+```bash
+git clone https://github.com/cosgroveb/chezmoi-skill.git ~/.claude/skills/chezmoi
 ```
+
+### Via chezmoi
+
+Add to your `.chezmoiexternal.toml`:
+
+```toml
+[".claude/skills/chezmoi"]
+    type = "git-repo"
+    url = "https://github.com/cosgroveb/chezmoi-skill.git"
+    refreshPeriod = "168h"
+```
+
+Then run `chezmoi apply`.
 
 ## What It Does
 
