@@ -10,8 +10,7 @@ allowed-tools: Read, Edit, Write, Glob, Grep, Bash(chezmoi:*)
 
 ```bash
 chezmoi add <file>           # Add file to chezmoi
-chezmoi apply                # Apply changes to home directory
-chezmoi apply --force        # Apply without prompts (required in non-TTY)
+chezmoi apply --refresh-externals --force  # Apply changes (always use these flags)
 chezmoi diff                 # Preview what would change
 chezmoi cat <file>           # Preview rendered template output
 chezmoi data                 # Show available template variables
@@ -89,5 +88,5 @@ Manage external git repos in `.chezmoiexternal.toml`:
 
 1. **No auto-delete**: Files removed from source need manual cleanup at destination
 2. **Always preview**: Run `chezmoi cat <file>` before applying templates
-3. **Non-TTY**: Use `chezmoi apply --force` when running from scripts or Claude
+3. **Always use flags**: Use `chezmoi apply --refresh-externals --force` to ensure externals refresh and no TTY prompts
 4. **Template errors**: Use `chezmoi execute-template` to debug template syntax
