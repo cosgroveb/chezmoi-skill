@@ -1,10 +1,16 @@
 ---
 name: chezmoi
-description: Manage dotfiles with chezmoi. Use when working with dotfiles, chezmoi templates, machine-specific configuration, or when the user mentions chezmoi.
+description: Manage dotfiles with chezmoi. Use when working with dotfiles, chezmoi templates, machine-specific configuration, syncing configs across machines, or when the user mentions chezmoi, dotfiles, or configuration management.
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash(chezmoi:*)
 ---
 
 # Chezmoi Dotfiles Management
+
+## Action Guidance
+
+When the user asks about dotfiles or chezmoi operations, **implement the changes directly** using chezmoi commands rather than only suggesting them. If the user says "make this work on macOS only" or "add my bashrc to chezmoi", proceed with implementation.
+
+Always preview significant changes with `chezmoi diff` or `chezmoi cat <file>` before applying.
 
 ## Commands
 
@@ -66,13 +72,13 @@ Convert a static file to a template by renaming with `.tmpl` suffix, then use co
 
 ## Escaping Nested Templates
 
-When the target file uses `{{ }}` syntax (like mise, Jinja, Tera):
+When the target file itself uses `{{ }}` syntax (like mise, Jinja2, or Tera templates), escape the braces so chezmoi doesn't process them as Go template syntax:
 
 ```
 SOME_VAR = "{{ "{{" }}env.OTHER_VAR{{ "}}" }}"
 ```
 
-This renders as `SOME_VAR = "{{env.OTHER_VAR}}"` in the output.
+This renders as `SOME_VAR = "{{env.OTHER_VAR}}"` in the output. The `{{ "{{" }}` and `{{ "}}" }}` are Go template expressions that output literal brace characters.
 
 ## Removing Files
 
@@ -119,9 +125,30 @@ Manage external git repos in `.chezmoiexternal.toml`:
     refreshPeriod = "168h"
 ```
 
+## Workflow: Converting Static File to Template
+
+When converting a static config to machine-specific template:
+
+1. Read the current file to understand its contents
+2. Identify machine-specific values (paths, hostnames, environment-specific settings)
+3. Run `chezmoi add --template <file>` to add as template
+4. Edit the template source to add conditionals (see "Machine-Specific Templates")
+5. Preview with `chezmoi cat <file>` to verify rendering on this machine
+6. Apply with `chezmoi apply --refresh-externals --force`
+
 ## Gotchas
 
 1. **Removing managed files**: Use `.chezmoiremove` to clean up files (see "Removing Files" section)
 2. **Always preview**: Run `chezmoi cat <file>` before applying templates
-3. **Always use flags**: Use `chezmoi apply --refresh-externals --force` to ensure externals refresh and no TTY prompts
-4. **Template errors**: Use `chezmoi execute-template` to debug template syntax
+3. **Always use `--refresh-externals --force` flags**: Critical because `--refresh-externals` ensures external git repos and archives update, and `--force` prevents interactive TTY prompts that would block execution (Claude cannot respond to interactive prompts)
+4. **Template errors**: Use `chezmoi execute-template '{{ .chezmoi.os }}'` to test template snippets
+
+## Troubleshooting
+
+**Template syntax errors**: Test small snippets with `chezmoi execute-template '{{ .chezmoi.os }}'`
+
+**File not applying**: Check `chezmoi status` and `chezmoi diff` to see what changes are pending
+
+**External not refreshing**: The refresh period might not have elapsed; use `--refresh-externals` flag to force refresh
+
+**Permission errors**: Verify file has correct prefix (`private_` for 600, `executable_` for 755)
