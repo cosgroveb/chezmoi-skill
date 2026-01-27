@@ -1,7 +1,13 @@
 ---
 name: chezmoi
 description: Manage dotfiles with chezmoi. Use when working with dotfiles, chezmoi templates, machine-specific configuration, syncing configs across machines, or when the user mentions chezmoi, dotfiles, or configuration management.
-allowed-tools: Read, Edit, Write, Glob, Grep, Bash(chezmoi:*)
+allowed-tools:
+  - Read
+  - Edit
+  - Write
+  - Glob
+  - Grep
+  - Bash(chezmoi *)
 ---
 
 # Chezmoi Dotfiles Management
